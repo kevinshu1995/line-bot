@@ -1,10 +1,24 @@
-#!/usr/bin/env node
+var express = require("express");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+
+var indexRouter = require("./routes/index");
+var lineBotRouter = require("./routes/line-bot");
+
+var app = express();
+
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use("/", indexRouter);
+app.use("/line-bot", lineBotRouter);
 
 /**
  * Module dependencies.
  */
 
-var app = require("../app");
 var debug = require("debug")("line-bot:server");
 var http = require("http");
 
@@ -84,4 +98,6 @@ function onListening() {
     var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
     debug("Listening on " + bind);
 }
+
+module.exports = app;
 
