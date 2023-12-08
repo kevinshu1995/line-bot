@@ -4,7 +4,6 @@ const router = express.Router();
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-    console.log({ sendMessage });
     res.status(200).send("Hello, this is line-bot server.");
 });
 
@@ -40,7 +39,12 @@ router.post("/webhook", async function (req, res) {
     });
 
     if (isAllSuccess) {
-        res.status(200).send("OK");
+        res.setHeader("Content-Type", "application/json");
+        const responseJson = {
+            message: "Success",
+            responses: responses.map(res => res.data),
+        };
+        res.status(200).json(responseJson);
         return;
     }
 
@@ -50,37 +54,7 @@ router.post("/webhook", async function (req, res) {
         }
     })?.status;
 
-    const responseError = responses.map(response => {
-        console.error(response);
-        if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            return {
-                config: error.config,
-                status: error.response.status,
-                data: error.response.data,
-                headers: error.response.headers,
-                message: error.message,
-            };
-        } else if (error.request) {
-            // The request was made but no response was received
-            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-            // http.ClientRequest in node.js
-            return {
-                config: error.config,
-                request: error.request,
-                message: error.message,
-            };
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            return {
-                config: error.config,
-                message: error.message,
-            };
-        }
-    });
-
-    res.status(firstStatus ?? 500).send(responseError);
+    res.status(firstStatus ?? 500).json(responses);
 });
 
 module.exports = router;

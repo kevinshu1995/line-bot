@@ -1,4 +1,4 @@
-const axios = require("axios");
+const axios = require("./axios.js");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -30,3 +30,4 @@ async function sendMessage(messages = [], { replyToken }) {
 module.exports = {
     sendMessage,
 };
+
