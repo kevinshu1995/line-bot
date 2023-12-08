@@ -26,10 +26,9 @@ router.post("/webhook", function (req, res) {
             if (event.message.type === "text") {
                 const userMessage = event.message.text;
                 axios
-                    .post("https://api.line.me/v2/bot/message/reply", {
-                        headers,
-                        body: {
-                            // Define reply token
+                    .post(
+                        "https://api.line.me/v2/bot/message/reply",
+                        {
                             replyToken: event.replyToken,
                             // Define reply messages
                             messages: [
@@ -43,15 +42,25 @@ router.post("/webhook", function (req, res) {
                                 },
                             ],
                         },
+                        {
+                            headers,
+                        }
+                    )
+                    .then(response => {
+                        console.log(response);
+                        res.status(200).send(response);
                     })
                     .catch(error => {
                         console.log(error);
+                        if (error.response) {
+                            res.status(error.response.status).send(error.response.response);
+                            return;
+                        }
+                        res.status(500).send(error);
                     });
             }
         }
     });
-
-    res.status(200).send("OK");
 });
 
 module.exports = router;
