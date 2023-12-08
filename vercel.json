@@ -1,9 +1,10 @@
 {
     "version": 2,
+    "installCommand": "pnpm install",
     "builds": [
         {
             "src": "index.js",
-            "use": "@now/node"
+            "use": "@vercel/node"
         }
     ],
     "routes": [
@@ -13,3 +14,4 @@
         }
     ]
 }
+
