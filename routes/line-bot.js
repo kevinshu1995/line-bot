@@ -1,15 +1,10 @@
 const express = require("express");
-const axios = require("axios");
+const { sendMessage } = require("../api/line-bot");
 const router = express.Router();
-const dotenv = require("dotenv");
-dotenv.config();
-
-const { env } = process;
-
-const TOKEN = env.LINE_ACCESS_TOKEN;
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
+    console.log({ sendMessage });
     res.status(200).send("Hello, this is line-bot server.");
 });
 
@@ -22,36 +17,19 @@ router.post("/webhook", async function (req, res) {
             })
             .map(event => {
                 const userMessage = event.message.text;
-                return axios
-                    .post(
-                        "https://api.line.me/v2/bot/message/reply",
+                return sendMessage(
+                    (messages = [
                         {
-                            replyToken: event.replyToken,
-                            // Define reply messages
-                            messages: [
-                                {
-                                    type: "text",
-                                    text: "Hello, user",
-                                },
-                                {
-                                    type: "text",
-                                    text: userMessage,
-                                },
-                            ],
+                            type: "text",
+                            text: "Hello, user",
                         },
                         {
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + TOKEN,
-                            },
-                        }
-                    )
-                    .then(response => {
-                        return response;
-                    })
-                    .catch(error => {
-                        return error;
-                    });
+                            type: "text",
+                            text: userMessage,
+                        },
+                    ]),
+                    { replyToken: event.replyToken }
+                );
             })
     );
 
