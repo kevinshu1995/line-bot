@@ -11,21 +11,12 @@ module.exports = function CommandMessage(req) {
 
         const reply = getCommandReplyMessage(userMessage);
         if (reply === null) {
-            return replyNothingMockApiResult({ event, message: "command not found" });
+            return replyNothingMockApiResult({ event, message: "no message to reply" });
         }
+        // const { data: userProfile, error: userProfileError } = await getUserProfile(event.source.userId);
+        // const greeting = userProfile ? `Hello, ${userProfile.displayName} \n` : "";
 
-        const { data: userProfile, error: userProfileError } = await getUserProfile(event.source.userId);
-        const greeting = userProfile ? `Hello, ${userProfile.displayName} \n` : "";
-
-        return sendMessage(
-            [
-                {
-                    type: "text",
-                    text: `${greeting}${reply}`,
-                },
-            ],
-            { replyToken: event.replyToken }
-        );
+        return sendMessage([reply], { replyToken: event.replyToken });
     });
 };
 
