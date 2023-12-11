@@ -8,27 +8,26 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/webhook", async function (req, res) {
-    const responses = await Promise.all(Reply(req));
-
-    const isAllSuccess = responses.every(({ status }) => {
-        return status >= 200 && status < 300;
-    });
-
-    if (isAllSuccess) {
+    try {
+        const responses = await Promise.all(Reply(req));
+        const errorAry = responses.filter(r => r.error !== null);
         res.setHeader("Content-Type", "application/json");
-        const responseJson = {
+
+        if (errorAry.length > 0) {
+            const errorMsgs = errorAry.map((e, i) => `error ${i + 1}: ${e?.error?.message}`).join("\n");
+            res.status(errorAry[0]?.status ?? 500).send({ error: errorMsgs });
+            return;
+        }
+
+        res.status(200).json({
             message: "Success",
-            responses: responses.map(res => res.data),
-        };
-        res.status(200).json(responseJson);
+            responses: responses.map(r => r.data),
+        });
+
         return;
+    } catch (error) {
+        res.status(500).json(error);
     }
-
-    const firstStatus = responses.find(({ error }) => {
-        return error !== null;
-    })?.status;
-
-    res.status(firstStatus ?? 500).json(responses);
 });
 
 module.exports = router;

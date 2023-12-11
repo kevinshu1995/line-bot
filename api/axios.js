@@ -46,7 +46,7 @@ axiosInstance.interceptors.response.use(
         })();
 
         console.error(apiLogPrefix(error.config), JSON.stringify(errorData, null, 2), "\n");
-        Promise.reject(errorData);
+        return Promise.reject(errorData);
     }
 );
 

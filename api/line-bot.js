@@ -22,12 +22,14 @@ async function sendMessage(messages = [], { replyToken }) {
             }
         );
 
+        console.log("sendmessage \n", res);
+
         return { data, error: null, status };
     } catch (error) {
         return {
             data: null,
             error,
-            status: error?.response?.status ?? 500,
+            status: error?.status ?? 500,
         };
     }
 }
