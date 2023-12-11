@@ -26,10 +26,9 @@ function reply(req) {
     //         mode: "active",
     //     },
     // ];
-    console.log("events", req.body.events);
-
     // 只需要 active 的 event
     req.body.events = req.body.events.filter(event => event?.mode === "active");
+    console.log("events", req.body.events, "\n");
 
     return [...JoinMessage(req), ...CommandMessage(req)];
 }

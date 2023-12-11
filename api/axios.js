@@ -1,6 +1,10 @@
 const axios = require("axios");
 const axiosInstance = axios.create();
 
+const apiLogPrefix = config => {
+    return `axios fetch api: [${config?.method ?? "NULL"}] ${config?.url ?? "NULL"}\n`;
+};
+
 axiosInstance.interceptors.response.use(
     function (response) {
         const responseJson = {
@@ -8,7 +12,7 @@ axiosInstance.interceptors.response.use(
             responses: Array.isArray(response) ? response.map(res => res.data) : response.data,
         };
 
-        console.log(JSON.stringify(responseJson, null, 2));
+        console.log(apiLogPrefix(response.config), JSON.stringify(responseJson, null, 2), "\n");
         return response;
     },
     function (error) {
@@ -41,7 +45,7 @@ axiosInstance.interceptors.response.use(
             }
         })();
 
-        console.error(JSON.stringify(errorData, null, 2));
+        console.error(apiLogPrefix(error.config), JSON.stringify(errorData, null, 2), "\n");
         Promise.reject(errorData);
     }
 );
