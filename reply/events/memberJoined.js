@@ -1,7 +1,7 @@
-const { sendMessage, replyNothingMockApiResult } = require("../api/line-bot");
-const { messages } = require("./configs");
+const { sendMessage, replyNothingMockApiResult } = require("../../api/line-bot");
+const { messages } = require("../configs");
 
-module.exports = function JoinMessage(req) {
+module.exports = function MemberJoinedMessage(req) {
     // join ==========
     const validMemberJoinedEvents = req.body.events.filter(event => event?.type === "memberJoined");
 

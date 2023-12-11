@@ -1,5 +1,5 @@
-const { sendMessage, getUserProfile, replyNothingMockApiResult } = require("../api/line-bot");
-const { getCommandReplyMessage } = require("./configs");
+const { sendMessage, getUserProfile, replyNothingMockApiResult } = require("../../api/line-bot");
+const { getCommandReplyMessage } = require("../configs");
 
 module.exports = function CommandMessage(req) {
     // reply =========

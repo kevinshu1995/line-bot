@@ -1,5 +1,6 @@
-const JoinMessage = require("./join");
-const CommandMessage = require("./command");
+const JoinMessage = require("./events/join");
+const CommandMessage = require("./events/command");
+const MemberJoinedMessage = require("./events/memberJoined");
 
 function reply(req) {
     // req.body.events =
@@ -43,7 +44,7 @@ function reply(req) {
     req.body.events = req.body.events.filter(event => event?.mode === "active");
     console.log("events", req.body.events, "\n");
 
-    return [...JoinMessage(req), ...CommandMessage(req)];
+    return [...JoinMessage(req), ...CommandMessage(req), ...MemberJoinedMessage(req)];
 }
 
 module.exports = reply;

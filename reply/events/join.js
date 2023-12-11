@@ -1,5 +1,5 @@
-const { sendMessage } = require("../api/line-bot");
-const { messages } = require("./configs");
+const { sendMessage } = require("../../api/line-bot");
+const { messages } = require("../configs");
 
 module.exports = function JoinMessage(req) {
     // join ==========
