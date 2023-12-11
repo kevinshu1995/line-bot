@@ -5,7 +5,7 @@ axiosInstance.interceptors.response.use(
     function (response) {
         const responseJson = {
             message: "Success",
-            responses: response.map(res => res.data),
+            responses: Array.isArray(response) ? response.map(res => res.data) : response.data,
         };
 
         console.log(JSON.stringify(responseJson, null, 2));
