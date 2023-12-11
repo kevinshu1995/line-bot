@@ -4,7 +4,9 @@ const commands = {
         commands: {
             hello: {
                 description: "打招呼",
-                reply: "你還要我怎樣？",
+                reply() {
+                    return "你還要我怎樣？";
+                },
             },
         },
     },
@@ -13,7 +15,9 @@ const commands = {
         commands: {
             help: {
                 description: "幫助",
-                reply: "我是個指令機器人，你可以輸入 ?commands 來查看指令列表",
+                reply() {
+                    return "我是個指令機器人，你可以輸入 ?commands 來查看指令列表";
+                },
             },
             commands: {
                 description: "指令列表",
@@ -53,7 +57,7 @@ const messages = {
  *  @param {String} userMessage
  *  @returns {Null | String}
  */
-function getCommandReplyMessage(userMessage) {
+function getCommandReplyMessage(userMessage, ...replyCallbackArgs) {
     const userFirstLetter = userMessage[0];
     if (commands[userFirstLetter] === undefined) return null;
 
@@ -61,12 +65,8 @@ function getCommandReplyMessage(userMessage) {
     const replyText = commands[userFirstLetter].commands[commandText]?.reply;
 
     if (replyText === undefined) return null;
-
-    if (typeof replyText === "function") {
-        return replyText();
-    }
-    return replyText;
+    return replyText(...replyCallbackArgs);
 }
 
-module.exports = { commands, messages, getCommandReplyMessage, getMessage };
+module.exports = { commands, messages, getCommandReplyMessage };
 
