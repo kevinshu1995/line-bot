@@ -66,7 +66,7 @@ function replyCommandOnly(req) {
     //         webhookEventId: String,
     //         deliveryContext: { isRedelivery: Boolean },
     //         timestamp: 1702262272333,
-    //         source: { type: "user", userId: String },
+    //         source: { type: "user" | "group" | "room", userId: String },
     //         replyToken: String,
     //         mode: "active",
     //     },
@@ -75,7 +75,7 @@ function replyCommandOnly(req) {
     return req.body.events
         .filter(event => event.type === "message" && event.mode === "active")
         .filter(event => {
-            return event.message.type === "text" && event.source.type === "user";
+            return event.message.type === "text";
         })
         .map(async event => {
             const userMessage = event.message.text;
