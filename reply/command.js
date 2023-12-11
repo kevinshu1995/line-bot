@@ -1,4 +1,4 @@
-const { sendMessage } = require("../api/line-bot");
+const { sendMessage, getUserProfile } = require("../api/line-bot");
 
 const commandOnly = {
     "!": {
@@ -53,23 +53,48 @@ function getReplyMessage(message) {
 }
 
 function replyCommandOnly(req) {
+    // [
+    //     {
+    //         type: "message",
+    //         message: {
+    //             type: "text",
+    //             id: "485584587125424469",
+    //             quotedMessageId: "485203261742907825",
+    //             quoteToken: "p19huK3N_F1Y0Gg-y9XGtvMwvzZ5G2urDlsDfWjOZkWQ5n_hf-1ktI5yjGHDzshMynugVJiowdSR-L0CBTzsdzpaRRESGH_tRNYDxyKIpmKecVPanbL8HFoljdMg3EZW6XP33QlKmDW4uDOxGblcBg",
+    //             text: "Hi ",
+    //         },
+    //         webhookEventId: "01HHBBSWT7Z1NVREZPM0NRANQ4",
+    //         deliveryContext: { isRedelivery: false },
+    //         timestamp: 1702262272333,
+    //         source: { type: "user", userId: "U2a0a2c5054c4fa12b78a1d059411e39c" },
+    //         replyToken: "ad6fe528768847fb8ce6074d8838e0e9",
+    //         mode: "active",
+    //     },
+    // ];
+    console.log("events", req.body.events);
     return req.body.events
         .filter(event => event.type === "message" && event.mode === "active")
         .filter(event => {
-            return event.message.type === "text";
+            return event.message.type === "text" && event.source.type === "user";
         })
-        .map(event => {
+        .map(async event => {
             const userMessage = event.message.text;
-            const reply = getReplyMessage(userMessage);
+            const replyNothing = {
+                status: 204,
+                data: {
+                    message: "Nothing to reply",
+                    source: event.source,
+                    userMessage,
+                },
+            };
 
-            if (reply === null)
-                return {
-                    status: 200,
-                    data: {
-                        message: "Nothing to reply",
-                        userMessage,
-                    },
-                };
+            const userProfile = await getUserProfile(event.source.userId);
+            console.log({ userProfile });
+
+            const reply = getReplyMessage(userMessage);
+            if (reply === null) {
+                return replyNothing;
+            }
 
             return sendMessage(
                 [
