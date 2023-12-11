@@ -37,6 +37,8 @@ const commandOnly = {
     },
 };
 
+const joinMessageText = "你好，" + commandOnly["?"].commands["help"].reply;
+
 function getReplyMessage(message) {
     const userFirstLetter = message[0];
     if (commandOnly[userFirstLetter] === undefined) return null;
@@ -64,50 +66,73 @@ function replyCommandOnly(req) {
     //             text: String,
     //         },
     //         webhookEventId: String,
-    //         deliveryContext: { isRedelivery: Boolean },
+    //         deliveryContext: {
+    //              isRedelivery: Boolean
+    //         },
     //         timestamp: 1702262272333,
-    //         source: { type: "user" | "group" | "room", userId: String },
+    //         source: {
+    //              type: "user" | "group" | "room",
+    //              userId: String
+    //         },
     //         replyToken: String,
     //         mode: "active",
     //     },
     // ];
     console.log("events", req.body.events);
-    return req.body.events
-        .filter(event => event.type === "message" && event.mode === "active")
-        .filter(event => {
-            return event.message.type === "text";
-        })
-        .map(async event => {
-            const userMessage = event.message.text;
-            const replyNothing = {
-                data: {
-                    message: "Nothing to reply",
-                    source: event.source,
-                    userMessage,
+    // 只需要 active 的 event
+    req.body.events = req.body.events.filter(event => event?.mode === "active");
+
+    // join ==========
+    const validJoinEvents = req.body.events.filter(event => event?.type === "join");
+    const joinMessages = validJoinEvents.map(event => {
+        return sendMessage(
+            [
+                {
+                    type: "text",
+                    text: joinMessageText,
                 },
-                error: null,
-                status: 204,
-            };
+            ],
+            { replyToken: event.replyToken }
+        );
+    });
 
-            const { data: userProfile, error: userProfileError } = await getUserProfile(event.source.userId);
+    // reply =========
+    // 是否有符合回應格式的訊息
+    const validReplyEvents = req.body.events.filter(event => event?.type === "message" && event?.message?.type === "text");
 
-            const reply = getReplyMessage(userMessage);
-            if (reply === null) {
-                return replyNothing;
-            }
+    const replyMessages = validReplyEvents.map(async event => {
+        const userMessage = event.message.text;
+        const replyNothing = {
+            data: {
+                message: "Nothing to reply",
+                source: event.source,
+                userMessage,
+            },
+            error: null,
+            status: 204,
+        };
 
-            const greeting = userProfile ? `Hello, ${userProfile.displayName} \n` : "";
+        const { data: userProfile, error: userProfileError } = await getUserProfile(event.source.userId);
 
-            return sendMessage(
-                [
-                    {
-                        type: "text",
-                        text: `${greeting}${reply}`,
-                    },
-                ],
-                { replyToken: event.replyToken }
-            );
-        });
+        const reply = getReplyMessage(userMessage);
+        if (reply === null) {
+            return replyNothing;
+        }
+
+        const greeting = userProfile ? `Hello, ${userProfile.displayName} \n` : "";
+
+        return sendMessage(
+            [
+                {
+                    type: "text",
+                    text: `${greeting}${reply}`,
+                },
+            ],
+            { replyToken: event.replyToken }
+        );
+    });
+
+    return [...replyMessages, ...joinMessages];
 }
 
 module.exports = { replyCommandOnly };
