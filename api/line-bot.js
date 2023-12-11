@@ -41,6 +41,13 @@ async function getUserProfile(userId) {
             },
         });
 
+        // data = {
+        //     userId: String,
+        //     displayName: String,
+        //     pictureUrl: String, // url
+        //     language: "en",
+        // };
+
         return { data, error: null, status };
     } catch (error) {
         return { data: null, error, status: error?.response?.status ?? 500 };
