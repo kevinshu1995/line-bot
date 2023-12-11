@@ -89,19 +89,20 @@ function replyCommandOnly(req) {
                 status: 204,
             };
 
-            const userProfile = await getUserProfile(event.source.userId);
-            console.log({ userProfile });
+            const { data: userProfile, error: userProfileError } = await getUserProfile(event.source.userId);
 
             const reply = getReplyMessage(userMessage);
             if (reply === null) {
                 return replyNothing;
             }
 
+            const greeting = userProfile ? `Hello, ${userProfile.displayName} \n` : "";
+
             return sendMessage(
                 [
                     {
                         type: "text",
-                        text: reply,
+                        text: `${greeting}${reply}`,
                     },
                 ],
                 { replyToken: event.replyToken }
