@@ -1,5 +1,5 @@
 const express = require("express");
-const { replyCommandOnly } = require("../reply/command.js");
+const Reply = require("../reply/index.js");
 const router = express.Router();
 
 /* GET home page. */
@@ -8,7 +8,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/webhook", async function (req, res) {
-    const responses = await Promise.all(replyCommandOnly(req));
+    const responses = await Promise.all(Reply(req));
 
     const isAllSuccess = responses.every(({ status }) => {
         return status >= 200 && status < 300;

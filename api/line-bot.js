@@ -54,8 +54,18 @@ async function getUserProfile(userId) {
     }
 }
 
+const replyNothingMockApiResult = extraData => ({
+    data: {
+        message: "Nothing to reply",
+        ...(extraData || {}),
+    },
+    error: null,
+    status: 204,
+});
+
 module.exports = {
     sendMessage,
     getUserProfile,
+    replyNothingMockApiResult,
 };
 
