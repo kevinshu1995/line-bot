@@ -10,10 +10,7 @@ router.get("/", function (req, res, next) {
 router.post("/webhook", async function (req, res) {
     const responses = await Promise.all(replyCommandOnly(req));
 
-    const isAllSuccess = responses.every(response => {
-        if (response === null) return true;
-        const status = response?.status;
-        if (status === undefined) return false;
+    const isAllSuccess = responses.every(({ status }) => {
         return status >= 200 && status < 300;
     });
 
@@ -27,10 +24,8 @@ router.post("/webhook", async function (req, res) {
         return;
     }
 
-    const firstStatus = responses.find(error => {
-        if (error?.response?.status) {
-            return error;
-        }
+    const firstStatus = responses.find(({ error }) => {
+        return error !== null;
     })?.status;
 
     res.status(firstStatus ?? 500).json(responses);

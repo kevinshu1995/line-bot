@@ -80,12 +80,13 @@ function replyCommandOnly(req) {
         .map(async event => {
             const userMessage = event.message.text;
             const replyNothing = {
-                status: 204,
                 data: {
                     message: "Nothing to reply",
                     source: event.source,
                     userMessage,
                 },
+                error: null,
+                status: 204,
             };
 
             const userProfile = await getUserProfile(event.source.userId);

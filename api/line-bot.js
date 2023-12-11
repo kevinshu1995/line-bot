@@ -8,7 +8,7 @@ const LINE_BASE_URL = "https://api.line.me";
 
 async function sendMessage(messages = [], { replyToken }) {
     try {
-        const response = await axios.post(
+        const { data, status } = await axios.post(
             `${LINE_BASE_URL}/v2/bot/message/reply`,
             {
                 replyToken,
@@ -22,24 +22,28 @@ async function sendMessage(messages = [], { replyToken }) {
             }
         );
 
-        return response;
+        return { data, error: null, status };
     } catch (error) {
-        return error;
+        return {
+            data: null,
+            error,
+            status: error?.response?.status ?? 500,
+        };
     }
 }
 
 async function getUserProfile(userId) {
     try {
-        const response = await axios.get(`${LINE_BASE_URL}/v2/bot/profile/${userId}`, {
+        const { data, status } = await axios.get(`${LINE_BASE_URL}/v2/bot/profile/${userId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + TOKEN,
             },
         });
 
-        return response;
+        return { data, error: null, status };
     } catch (error) {
-        return error;
+        return { data: null, error, status: error?.response?.status ?? 500 };
     }
 }
 
