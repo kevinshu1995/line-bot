@@ -9,7 +9,7 @@ module.exports = function JoinMessage(req) {
             [
                 {
                     type: "text",
-                    text: messages.join.reply,
+                    text: messages.join.reply(),
                 },
             ],
             { replyToken: event.replyToken }

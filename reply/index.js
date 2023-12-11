@@ -24,6 +24,19 @@ function reply(req) {
     //         },
     //         replyToken: String,
     //         mode: "active",
+    // .       // joined 只有 type: "memberJoined" 才會有
+    //         "joined": {
+    //             "members": [
+    //               {
+    //                 "type": "user",
+    //                 "userId": "U4af4980629..."
+    //               },
+    //               {
+    //                 "type": "user",
+    //                 "userId": "U91eeaf62d9..."
+    //               }
+    //             ]
+    //           }
     //     },
     // ];
     // 只需要 active 的 event

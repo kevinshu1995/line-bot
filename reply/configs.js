@@ -37,7 +37,14 @@ const commands = {
 
 const messages = {
     join: {
-        reply: "你好，" + commands["?"].commands["help"].reply,
+        reply() {
+            return "你好，" + commands["?"].commands["help"].reply;
+        },
+    },
+    memberJoined: {
+        reply({ joinedMembers }) {
+            return `歡迎 ${joinedMembers.map(member => member.displayName).join(", ")} 加入！`;
+        },
     },
 };
 
@@ -61,5 +68,5 @@ function getCommandReplyMessage(userMessage) {
     return replyText;
 }
 
-module.exports = { commands, messages, getCommandReplyMessage };
+module.exports = { commands, messages, getCommandReplyMessage, getMessage };
 
