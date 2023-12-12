@@ -1,108 +1,22 @@
+const NormalReplyMessages = require("./messages/normal");
+const DiceMessages = require("./messages/dice");
+
 const commands = {
     "!": {
         prefix: "!",
         commands: {
-            roll: {
-                description: "擲一個六面骰子",
-                flexMessage() {
-                    const diceNum = Math.floor(Math.random() * 6) + 1;
-
-                    return {
-                        altText: "擲骰子",
-                        contents: {
-                            type: "bubble",
-                            hero: {
-                                type: "image",
-                                url: "https://i.giphy.com/ckHAdLU2OmY7knUClD.webp",
-                                size: "full",
-                                aspectRatio: "20:13",
-                                aspectMode: "cover",
-                            },
-                            body: {
-                                type: "box",
-                                layout: "vertical",
-                                spacing: "md",
-                                action: {
-                                    type: "uri",
-                                    uri: "https://linecorp.com",
-                                },
-                                contents: [
-                                    {
-                                        type: "text",
-                                        text: "擲骰子",
-                                        size: "xl",
-                                        weight: "bold",
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "vertical",
-                                        spacing: "sm",
-                                        contents: [
-                                            {
-                                                type: "text",
-                                                text: `你擲出了 ${diceNum} 點`,
-                                                size: "sm",
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
-                            footer: {
-                                type: "box",
-                                layout: "vertical",
-                                contents: [
-                                    {
-                                        type: "button",
-                                        style: "primary",
-                                        color: "#905c44",
-                                        margin: "xxl",
-                                        action: {
-                                            type: "postback",
-                                            label: "再擲一次",
-                                            data: "command=!roll",
-                                            displayText: "Roll dice again!",
-                                        },
-                                    },
-                                ],
-                            },
-                        },
-                    };
-                },
-                reply() {
-                    return null;
-                },
-            },
-            hello: {
-                description: "打招呼",
-                reply() {
-                    return "你還要我怎樣？";
-                },
-            },
+            roll: DiceMessages.roll,
+            hello: NormalReplyMessages.hello,
         },
     },
     "?": {
         prefix: "?",
         commands: {
-            help: {
-                description: "幫助",
-                reply() {
-                    return "我是個指令機器人，你可以輸入 ?commands 來查看指令列表";
-                },
-            },
+            help: NormalReplyMessages.help,
             commands: {
-                description: "指令列表",
+                description: "取得機器人的所有指令列表",
                 reply() {
-                    const allCommandAry = Object.keys(commands)
-                        .map(prefix => {
-                            return Object.keys(commands[prefix].commands)
-                                .map(command => {
-                                    return `${prefix}${command}: ${commands[prefix].commands[command].description}`;
-                                })
-                                .join("\n");
-                        })
-                        .join("\n");
-
-                    return "指令列表 \n" + allCommandAry;
+                    return "指令列表 \n" + getAllCommandsIntroText();
                 },
             },
         },
@@ -110,17 +24,23 @@ const commands = {
 };
 
 const messages = {
-    join: {
-        reply() {
-            return "你好，" + commands["?"].commands["help"].reply;
-        },
-    },
-    memberJoined: {
-        reply({ joinedMembers }) {
-            return `歡迎 ${joinedMembers.map(member => member.displayName).join(", ")} 加入！`;
-        },
-    },
+    join: NormalReplyMessages.join,
+    memberJoined: NormalReplyMessages.memberJoined,
 };
+
+// 取得所有指令的簡易說明文字 (用來回應 ?commands)
+function getAllCommandsIntroText() {
+    const commandsObj = commands;
+    return Object.keys(commandsObj)
+        .map(prefix => {
+            return Object.keys(commandsObj[prefix].commands)
+                .map(command => {
+                    return `${prefix}${command}: ${commandsObj[prefix].commands[command].description}`;
+                })
+                .join("\n");
+        })
+        .join("\n");
+}
 
 /**
  *
