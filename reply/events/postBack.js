@@ -1,7 +1,7 @@
-const { sendMessage, replyNothingMockApiResult } = require("../../api/line-bot");
-const { getCommandReplyMessage } = require("../configs");
+import LineBot from "../../api/line-bot.js";
+import Configs from "../configs.js";
 
-module.exports = function PostBackMessage(req) {
+export default function PostBackMessage(req) {
     const validReplyEvents = req.body.events.filter(event => event?.type === "postback");
 
     return validReplyEvents.map(async event => {
@@ -13,14 +13,14 @@ module.exports = function PostBackMessage(req) {
         }, {});
 
         if (dataObj.command !== undefined) {
-            const reply = getCommandReplyMessage(dataObj.command);
+            const reply = Configs.getCommandReplyMessage(dataObj.command);
             if (reply === null) {
-                return replyNothingMockApiResult({ event, message: "no message to reply" });
+                return LineBot.replyNothingMockApiResult({ event, message: "no message to reply" });
             }
-            return sendMessage([reply], { replyToken: event.replyToken });
+            return LineBot.sendMessage([reply], { replyToken: event.replyToken });
         }
 
-        return replyNothingMockApiResult({ event, message: "no message to reply" });
+        return LineBot.replyNothingMockApiResult({ event, message: "no message to reply" });
     });
-};
+}
 

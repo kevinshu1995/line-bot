@@ -1,6 +1,6 @@
-const express = require("express");
-const axios = require("axios");
-const Reply = require("../reply/index.js");
+import express from "express";
+import axios from "axios";
+import Reply from "../reply/index.js";
 const router = express.Router();
 
 /* GET home page. */
@@ -34,5 +34,5 @@ router.post("/webhook", async function (req, res) {
     }
 });
 
-module.exports = router;
+export default router;
 

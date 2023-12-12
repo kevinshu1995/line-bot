@@ -1,6 +1,6 @@
-const { rollDice } = require("../../model/dice");
+import { rollDice } from "../../model/dice.js";
 
-module.exports = {
+export default {
     roll: {
         description: "擲一個六面骰子",
         flexMessage() {

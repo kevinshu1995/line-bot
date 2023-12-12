@@ -1,19 +1,19 @@
-const { sendMessage } = require("../../api/line-bot");
-const { messages } = require("../configs");
+import LineBot from "../../api/line-bot.js";
+import Configs from "../configs.js";
 
-module.exports = function JoinMessage(req) {
+export default function JoinMessage(req) {
     // join ==========
     const validJoinEvents = req.body.events.filter(event => event?.type === "join");
     return validJoinEvents.map(event => {
-        return sendMessage(
+        return LineBot.sendMessage(
             [
                 {
                     type: "text",
-                    text: messages.join.reply(),
+                    text: Configs.messages.join.reply(),
                 },
             ],
             { replyToken: event.replyToken }
         );
     });
-};
+}
 

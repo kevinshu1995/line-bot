@@ -1,5 +1,5 @@
-const NormalReplyMessages = require("./messages/normal");
-const DiceMessages = require("./messages/dice");
+import NormalReplyMessages from "./messages/normal.js";
+import DiceMessages from "./messages/dice.js";
 
 const commands = {
     "!": {
@@ -70,5 +70,5 @@ function getCommandReplyMessage(userMessage, ...replyCallbackArgs) {
     return null;
 }
 
-module.exports = { commands, messages, getCommandReplyMessage };
+export default { commands, messages, getCommandReplyMessage };
 

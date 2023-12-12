@@ -4,7 +4,7 @@
  *
  *  @return {Number} 回傳骰子點數
  */
-function rollDice(diceType = 6) {
+export function rollDice(diceType = 6) {
     return Math.floor(Math.random() * diceType) + 1;
 }
 
@@ -16,7 +16,7 @@ function rollDice(diceType = 6) {
  *
  *  @return {Number[]} 回傳骰子點數陣列
  */
-function rollMultiDices(diceNum = 1, diceType = 6) {
+export function rollMultiDices(diceNum = 1, diceType = 6) {
     let result = [];
     for (let i = 0; i < diceNum; i++) {
         result.push(rollDice(diceType));
@@ -24,7 +24,3 @@ function rollMultiDices(diceNum = 1, diceType = 6) {
     return result;
 }
 
-module.exports = {
-    rollDice,
-    rollMultiDices,
-};

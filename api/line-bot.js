@@ -1,5 +1,5 @@
-const axios = require("./axios.js");
-const dotenv = require("dotenv");
+import axios from "./axios.js";
+import dotenv from "dotenv";
 
 dotenv.config();
 const { env } = process;
@@ -63,7 +63,7 @@ const replyNothingMockApiResult = extraData => ({
     status: 204,
 });
 
-module.exports = {
+export default {
     sendMessage,
     getUserProfile,
     replyNothingMockApiResult,

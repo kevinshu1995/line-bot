@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     hello: {
         description: "機器人打招呼",
         reply() {

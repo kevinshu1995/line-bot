@@ -1,11 +1,13 @@
-var express = require("express");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+import express from "express";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import http from "http";
+import DEBUG from "debug";
 
-var indexRouter = require("./routes/index");
-var lineBotRouter = require("./routes/line-bot");
+import indexRouter from "./routes/index.js";
+import lineBotRouter from "./routes/line-bot.js";
 
-var app = express();
+const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -19,21 +21,20 @@ app.use("/line-bot", lineBotRouter);
  * Module dependencies.
  */
 
-var debug = require("debug")("line-bot:server");
-var http = require("http");
+const debug = DEBUG("line-bot:server");
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -48,16 +49,16 @@ server.on("listening", onListening);
  */
 
 function normalizePort(val) {
-    var port = parseInt(val, 10);
+    const _port = parseInt(val, 10);
 
-    if (isNaN(port)) {
+    if (isNaN(_port)) {
         // named pipe
         return val;
     }
 
-    if (port >= 0) {
+    if (_port >= 0) {
         // port number
-        return port;
+        return _port;
     }
 
     return false;
@@ -72,7 +73,7 @@ function onError(error) {
         throw error;
     }
 
-    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+    const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
@@ -94,10 +95,10 @@ function onError(error) {
  */
 
 function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    const addr = server.address();
+    const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
     debug("Listening on " + bind);
 }
 
-module.exports = app;
+export default app;
 

@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 const axiosInstance = axios.create();
 
 const apiLogPrefix = config => {
@@ -50,5 +50,5 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-module.exports = axiosInstance;
+export default axiosInstance;
 

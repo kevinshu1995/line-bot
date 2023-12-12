@@ -1,6 +1,6 @@
 // https://notify-bot.line.me/oauth/token
 
-const axios = require("axios");
+import axios from "axios";
 const notifyBaseUrl = "https://notify-bot.line.me";
 
 async function fetchAuthorize() {

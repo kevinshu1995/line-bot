@@ -1,9 +1,9 @@
-const JoinMessage = require("./events/join");
-const CommandMessage = require("./events/command");
-const MemberJoinedMessage = require("./events/memberJoined");
-const PostBackMessage = require("./events/postBack");
+import JoinMessage from "./events/join.js";
+import CommandMessage from "./events/command.js";
+import MemberJoinedMessage from "./events/memberJoined.js";
+import PostBackMessage from "./events/postBack.js";
 
-function reply(req) {
+export default function reply(req) {
     // req.body.events =
     // [
     //     {
@@ -47,6 +47,4 @@ function reply(req) {
 
     return [...JoinMessage(req), ...CommandMessage(req), ...MemberJoinedMessage(req), ...PostBackMessage(req)];
 }
-
-module.exports = reply;
 
