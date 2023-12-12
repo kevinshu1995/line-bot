@@ -2,23 +2,21 @@ const commands = {
     "!": {
         prefix: "!",
         commands: {
-            profile: {
-                description: "取得個人資料",
+            roll: {
+                description: "擲一個六面骰子",
                 flexMessage() {
+                    const diceNum = Math.floor(Math.random() * 6) + 1;
+
                     return {
-                        altText: "profile",
+                        altText: "擲骰子",
                         contents: {
                             type: "bubble",
                             hero: {
                                 type: "image",
-                                url: "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_2_restaurant.png",
+                                url: "https://i.giphy.com/ckHAdLU2OmY7knUClD.webp",
                                 size: "full",
                                 aspectRatio: "20:13",
                                 aspectMode: "cover",
-                                action: {
-                                    type: "uri",
-                                    uri: "https://linecorp.com",
-                                },
                             },
                             body: {
                                 type: "box",
@@ -31,7 +29,7 @@ const commands = {
                                 contents: [
                                     {
                                         type: "text",
-                                        text: "Brown's Burger",
+                                        text: "擲骰子",
                                         size: "xl",
                                         weight: "bold",
                                     },
@@ -41,61 +39,11 @@ const commands = {
                                         spacing: "sm",
                                         contents: [
                                             {
-                                                type: "box",
-                                                layout: "baseline",
-                                                contents: [
-                                                    {
-                                                        type: "icon",
-                                                        url: "https://scdn.line-apps.com/n/channel_devcenter/img/fx/restaurant_regular_32.png",
-                                                    },
-                                                    {
-                                                        type: "text",
-                                                        text: "$10.5",
-                                                        weight: "bold",
-                                                        margin: "sm",
-                                                        flex: 0,
-                                                    },
-                                                    {
-                                                        type: "text",
-                                                        text: "400kcl",
-                                                        size: "sm",
-                                                        align: "end",
-                                                        color: "#aaaaaa",
-                                                    },
-                                                ],
-                                            },
-                                            {
-                                                type: "box",
-                                                layout: "baseline",
-                                                contents: [
-                                                    {
-                                                        type: "icon",
-                                                        url: "https://scdn.line-apps.com/n/channel_devcenter/img/fx/restaurant_large_32.png",
-                                                    },
-                                                    {
-                                                        type: "text",
-                                                        text: "$15.5",
-                                                        weight: "bold",
-                                                        margin: "sm",
-                                                        flex: 0,
-                                                    },
-                                                    {
-                                                        type: "text",
-                                                        text: "550kcl",
-                                                        size: "sm",
-                                                        align: "end",
-                                                        color: "#aaaaaa",
-                                                    },
-                                                ],
+                                                type: "text",
+                                                text: `你擲出了 ${diceNum} 點`,
+                                                size: "sm",
                                             },
                                         ],
-                                    },
-                                    {
-                                        type: "text",
-                                        text: "Sauce, Onions, Pickles, Lettuce & Cheese",
-                                        wrap: true,
-                                        color: "#aaaaaa",
-                                        size: "xxs",
                                     },
                                 ],
                             },
@@ -109,9 +57,10 @@ const commands = {
                                         color: "#905c44",
                                         margin: "xxl",
                                         action: {
-                                            type: "uri",
-                                            label: "Add to Cart",
-                                            uri: "https://linecorp.com",
+                                            type: "postback",
+                                            label: "再擲一次",
+                                            data: "command=!roll",
+                                            displayText: "Roll dice again!",
                                         },
                                     },
                                 ],
@@ -121,13 +70,6 @@ const commands = {
                 },
                 reply() {
                     return null;
-                },
-            },
-            roll: {
-                description: "擲一個六面骰子",
-                reply() {
-                    const diceNum = Math.floor(Math.random() * 6) + 1;
-                    return `你擲出了 ${diceNum} 點`;
                 },
             },
             hello: {
