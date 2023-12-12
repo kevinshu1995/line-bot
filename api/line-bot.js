@@ -54,6 +54,31 @@ async function getUserProfile(userId) {
     }
 }
 
+async function validateReply({ messages = [] }) {
+    try {
+        const { data, status } = await axios.post(
+            `${LINE_BASE_URL}/v2/bot/message/validate/reply`,
+            {
+                messages,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + TOKEN,
+                },
+            }
+        );
+
+        return { data, error: null, status };
+    } catch (error) {
+        return {
+            data: null,
+            error,
+            status: error?.status ?? 555,
+        };
+    }
+}
+
 const replyNothingMockApiResult = extraData => ({
     data: {
         message: "Nothing to reply",
@@ -65,6 +90,7 @@ const replyNothingMockApiResult = extraData => ({
 
 export default {
     sendMessage,
+    validateReply,
     getUserProfile,
     replyNothingMockApiResult,
 };

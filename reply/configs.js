@@ -45,7 +45,7 @@ function getAllCommandsIntroText() {
 /**
  *
  *  @param {String} userMessage
- *  @returns {Null | String}
+ *  @returns {Null | MessageObject}
  */
 function getCommandReplyMessage(userMessage, ...replyCallbackArgs) {
     const userFirstLetter = userMessage[0];
