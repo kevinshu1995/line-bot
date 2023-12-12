@@ -17,9 +17,10 @@ module.exports = function PostBackMessage(req) {
             if (reply === null) {
                 return replyNothingMockApiResult({ event, message: "no message to reply" });
             }
+            return sendMessage([reply], { replyToken: event.replyToken });
         }
 
-        return sendMessage([reply], { replyToken: event.replyToken });
+        return replyNothingMockApiResult({ event, message: "no message to reply" });
     });
 };
 

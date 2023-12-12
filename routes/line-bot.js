@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 const Reply = require("../reply/index.js");
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.post("/webhook", async function (req, res) {
 
         if (errorAry.length > 0) {
             const errorMsgs = errorAry.map((e, i) => `error ${i + 1}: ${e?.error?.message}`).join("\n");
-            res.status(errorAry[0]?.status ?? 500).send({ error: errorMsgs });
+            res.status(errorAry[0]?.status ?? 555).send({ error: errorMsgs });
             return;
         }
 
@@ -26,7 +27,10 @@ router.post("/webhook", async function (req, res) {
 
         return;
     } catch (error) {
-        res.status(500).json(error);
+        if (!axios.isAxiosError(error)) {
+            console.log("webhook error: ", error);
+        }
+        res.status(555).json(error);
     }
 });
 
