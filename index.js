@@ -16,6 +16,7 @@ app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/line-bot", lineBotRouter);
+app.use(express.static("static"));
 
 /**
  * Module dependencies.
