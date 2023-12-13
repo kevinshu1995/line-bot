@@ -12,6 +12,7 @@
         "verbose": true
     },
     "dependencies": {
+        "@supabase/supabase-js": "^2.39.0",
         "axios": "^1.6.2",
         "cookie-parser": "~1.4.4",
         "debug": "~2.6.9",
@@ -23,4 +24,3 @@
         "jest": "^29.7.0"
     }
 }
-
