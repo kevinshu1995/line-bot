@@ -1,5 +1,6 @@
 import NormalReplyMessages from "./messages/normal.js";
 import DiceMessages from "./messages/dice.js";
+import UserMessages from "./messages/user.js";
 
 const commands = {
     "!": {
@@ -7,6 +8,8 @@ const commands = {
         commands: {
             roll: DiceMessages.roll,
             hello: NormalReplyMessages.hello,
+            register: UserMessages.register,
+            profile: UserMessages.profile,
         },
     },
     "?": {
