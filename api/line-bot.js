@@ -24,6 +24,9 @@ async function sendMessage(messages = [], { replyToken }) {
 
         return { data, error: null, status };
     } catch (error) {
+        if (axios.isAxiosError(error) === false) {
+            console.error("sendMessage error \n", error);
+        }
         return {
             data: null,
             error,
@@ -50,6 +53,9 @@ async function getUserProfile(userId) {
 
         return { data, error: null, status };
     } catch (error) {
+        if (axios.isAxiosError(error) === false) {
+            console.error("sendMessage error \n", error);
+        }
         return { data: null, error, status: error?.response?.status ?? 555 };
     }
 }
@@ -71,6 +77,9 @@ async function validateReply({ messages = [] }) {
 
         return { data, error: null, status };
     } catch (error) {
+        if (axios.isAxiosError(error) === false) {
+            console.error("sendMessage error \n", error);
+        }
         return {
             data: null,
             error,
