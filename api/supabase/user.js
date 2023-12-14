@@ -25,7 +25,19 @@ export async function getOneUserByLineId(line_id) {
         console.error("[supabase getOneUserByLineId] failed. response: \n", { data, error, ...rest });
     }
 
-    return { data: data?.[0] ?? null, error, ...rest };
+    if (data.length === 0) {
+        const response = {
+            ...rest,
+            data: null,
+            error: new Error("User not found"),
+            status: 404,
+            statusText: "Not Found",
+        };
+        console.error("[supabase setNewUser] failed. response: \n", response);
+        return response;
+    }
+
+    return { data: data[0] ?? null, error, ...rest };
 }
 
 /**
