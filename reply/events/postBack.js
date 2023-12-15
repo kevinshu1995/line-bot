@@ -13,7 +13,7 @@ export default function PostBackMessage(req) {
         }, {});
 
         if (dataObj.command !== undefined) {
-            const reply = Configs.getCommandReplyMessage(dataObj.command);
+            const reply = Configs.getCommandReplyMessage(dataObj.command, event);
             if (reply === null) {
                 return LineBot.replyNothingMockApiResult({ event, message: "no message to reply" });
             }

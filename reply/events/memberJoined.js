@@ -14,7 +14,7 @@ export default function MemberJoinedMessage(req) {
             [
                 {
                     type: "text",
-                    text: Configs.messages.memberJoined.reply({ joinedMembers: joinedUsers }),
+                    text: Configs.messages.memberJoined.reply(event, { joinedMembers: joinedUsers }),
                 },
             ],
             { replyToken: event.replyToken }

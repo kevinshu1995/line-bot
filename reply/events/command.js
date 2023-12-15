@@ -9,7 +9,7 @@ export default function CommandMessage(req) {
     return validReplyEvents.map(async event => {
         const userMessage = event.message.text;
 
-        const reply = Configs.getCommandReplyMessage(userMessage);
+        const reply = Configs.getCommandReplyMessage(userMessage, event);
         if (reply === null) {
             return LineBot.replyNothingMockApiResult({ event, message: "no message to reply" });
         }

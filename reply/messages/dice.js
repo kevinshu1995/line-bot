@@ -3,7 +3,7 @@ import { rollDice } from "../../model/dice.js";
 export default {
     roll: {
         description: "擲一個六面骰子",
-        flexMessage() {
+        flexMessage(event) {
             const diceNum = rollDice(6);
 
             return {

@@ -9,7 +9,7 @@ export default function JoinMessage(req) {
             [
                 {
                     type: "text",
-                    text: Configs.messages.join.reply(),
+                    text: Configs.messages.join.reply(event),
                 },
             ],
             { replyToken: event.replyToken }

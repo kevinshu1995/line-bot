@@ -15,7 +15,7 @@ const commands = {
             help: NormalReplyMessages.help,
             commands: {
                 description: "取得機器人的所有指令列表",
-                reply() {
+                reply(event) {
                     return "指令列表 \n" + getAllCommandsIntroText();
                 },
             },
