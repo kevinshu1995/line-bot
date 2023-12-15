@@ -1,4 +1,5 @@
 import axios from "./axios.js";
+import { isAxiosError } from "axios";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -24,7 +25,7 @@ async function sendMessage(messages = [], { replyToken }) {
 
         return { data, error: null, status };
     } catch (error) {
-        if (axios.isAxiosError(error) === false) {
+        if (isAxiosError(error) === false) {
             console.error("sendMessage error \n", error);
         }
         return {
@@ -53,7 +54,7 @@ async function getUserProfile(userId) {
 
         return { data, error: null, status };
     } catch (error) {
-        if (axios.isAxiosError(error) === false) {
+        if (isAxiosError(error) === false) {
             console.error("sendMessage error \n", error);
         }
         return { data: null, error, status: error?.response?.status ?? 555 };
@@ -77,7 +78,7 @@ async function validateReply({ messages = [] }) {
 
         return { data, error: null, status };
     } catch (error) {
-        if (axios.isAxiosError(error) === false) {
+        if (isAxiosError(error) === false) {
             console.error("sendMessage error \n", error);
         }
         return {

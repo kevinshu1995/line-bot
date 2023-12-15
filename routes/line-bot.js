@@ -1,6 +1,7 @@
 import express from "express";
 import axios from "axios";
 import Reply from "../reply/index.js";
+import { isAxiosError } from "axios";
 const router = express.Router();
 
 /* GET home page. */
@@ -27,7 +28,7 @@ router.post("/webhook", async function (req, res) {
 
         return;
     } catch (error) {
-        if (!axios.isAxiosError(error)) {
+        if (!isAxiosError(error)) {
             console.log("webhook error: ", error);
         }
         res.status(555).json(error);
