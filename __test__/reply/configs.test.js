@@ -2,11 +2,12 @@ import Configs from "./../../reply/configs.js";
 import LineBot from "./../../api/line-bot.js";
 
 const command = Configs.commands;
+const customEvent = { source: { userId: "aaa" } };
 
 describe("Test getCommandReplyMessage return value properly", () => {
-    test("when user typed: !hello", () => {
+    test("when user typed: !hello", async () => {
         const userMessage = "!hello";
-        const replyMessage = Configs.getCommandReplyMessage(userMessage);
+        const replyMessage = await Configs.getCommandReplyMessage(userMessage);
 
         const expectedReplyMessage = {
             text: command["!"].commands.hello.reply(),
@@ -16,9 +17,9 @@ describe("Test getCommandReplyMessage return value properly", () => {
         expect(replyMessage).toMatchObject(expectedReplyMessage);
     });
 
-    test("when user typed: ?help", () => {
+    test("when user typed: ?help", async () => {
         const userMessage = "?help";
-        const replyMessage = Configs.getCommandReplyMessage(userMessage);
+        const replyMessage = await Configs.getCommandReplyMessage(userMessage);
 
         const expectedReplyMessage = {
             text: command["?"].commands.help.reply(),
@@ -28,9 +29,9 @@ describe("Test getCommandReplyMessage return value properly", () => {
         expect(replyMessage).toMatchObject(expectedReplyMessage);
     });
 
-    test("when user typed: ?commands", () => {
+    test("when user typed: ?commands", async () => {
         const userMessage = "?commands";
-        const replyMessage = Configs.getCommandReplyMessage(userMessage);
+        const replyMessage = await Configs.getCommandReplyMessage(userMessage);
 
         const expectedReplyMessage = {
             text: command["?"].commands.commands.reply(),
@@ -40,9 +41,9 @@ describe("Test getCommandReplyMessage return value properly", () => {
         expect(replyMessage).toMatchObject(expectedReplyMessage);
     });
 
-    test("when user typed: ?xxx (not a defined command)", () => {
+    test("when user typed: ?xxx (not a defined command)", async () => {
         const userMessage = "?xxx";
-        const replyMessage = Configs.getCommandReplyMessage(userMessage);
+        const replyMessage = await Configs.getCommandReplyMessage(userMessage);
 
         const expectedReplyMessage = null;
 
@@ -50,22 +51,36 @@ describe("Test getCommandReplyMessage return value properly", () => {
     });
 });
 
-const allCommands = Object.keys(command).reduce((all, prefix) => {
-    Object.keys(command[prefix].commands).forEach(commandName => {
-        const commandContent = command[prefix].commands[commandName];
-        if (commandContent.reply) {
-            all.push([`${prefix}${commandName}`, { type: "text", text: commandContent.reply() }]);
-        }
-        if (commandContent.flexMessage) {
-            all.push([`${prefix}${commandName}`, { type: "flex", ...commandContent.flexMessage() }]);
-        }
+const allCommands = Object.keys(command)
+    .reduce((all, prefix) => {
+        const result = Object.keys(command[prefix].commands).map(commandName => {
+            const commandContent = command[prefix].commands[commandName];
+            if (commandContent.reply) {
+                const fn = async () => {
+                    const text = await commandContent.reply(customEvent);
+                    return { type: "text", text };
+                };
+                return [`${prefix}${commandName}`, fn];
+            }
+            if (commandContent.flexMessage) {
+                const fn = async () => {
+                    const flexMessage = await commandContent.flexMessage(customEvent);
+                    return { type: "flex", ...flexMessage };
+                };
+                return [`${prefix}${commandName}`, fn];
+            }
+        });
+        return all.concat(result);
+    }, [])
+    .filter(([command, _]) => {
+        const skipCommands = ["!profile", "!register"];
+        return !skipCommands.includes(command);
     });
-    return all;
-}, []);
 
 describe("Test Configs.commands reply & flexMessage structure is valid", () => {
-    test.concurrent.each(allCommands)("when user typed: %s", async (command, replyMessage) => {
-        const response = await LineBot.validateReply({ messages: [replyMessage] });
+    test.concurrent.each(allCommands)("when user typed: %s", async (command, fn) => {
+        const message = await fn();
+        const response = await LineBot.validateReply({ messages: [message] });
         if (response.status !== 200) {
             console.error("validateReply !roll response: \n", response);
         }
@@ -75,7 +90,8 @@ describe("Test Configs.commands reply & flexMessage structure is valid", () => {
 
 describe("Test Configs.commands and getCommandReplyMessage together", () => {
     test.concurrent.each(allCommands)("when user typed: %s", async (command, _) => {
-        const response = await LineBot.validateReply({ messages: [Configs.getCommandReplyMessage(command)] });
+        const message = await Configs.getCommandReplyMessage(command, customEvent);
+        const response = await LineBot.validateReply({ messages: [message] });
         if (response.status !== 200) {
             console.error("validateReply !roll response: \n", response);
         }

@@ -50,7 +50,7 @@ function getAllCommandsIntroText() {
  *  @param {String} userMessage
  *  @returns {Null | MessageObject}
  */
-function getCommandReplyMessage(userMessage, ...replyCallbackArgs) {
+async function getCommandReplyMessage(userMessage, ...replyCallbackArgs) {
     const userFirstLetter = userMessage[0];
     if (commands[userFirstLetter] === undefined) return null;
 
@@ -60,13 +60,13 @@ function getCommandReplyMessage(userMessage, ...replyCallbackArgs) {
 
     const replyText = commandObject?.reply;
     if (replyText && typeof replyText === "function") {
-        const replyTextResult = replyText(...replyCallbackArgs);
+        const replyTextResult = await Promise.resolve(replyText(...replyCallbackArgs));
         if (replyTextResult) return { type: "text", text: replyTextResult };
     }
 
     const flexMessage = commandObject?.flexMessage;
     if (flexMessage && typeof flexMessage === "function") {
-        const flexMessageResult = flexMessage(...replyCallbackArgs);
+        const flexMessageResult = await Promise.resolve(flexMessage(...replyCallbackArgs));
         if (flexMessageResult) return { type: "flex", ...flexMessageResult };
     }
 
