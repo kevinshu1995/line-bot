@@ -78,16 +78,19 @@ export async function setNewUser(NewUserData = {}) {
 
     const responseGetOneUserByLineId = await getOneUserByLineId(line_id);
 
-    if (responseGetOneUserByLineId.error) {
-        return responseGetOneUserByLineId;
-    }
+    // 找不到代表沒有建立過
+    if (responseGetOneUserByLineId.status !== 404) {
+        if (responseGetOneUserByLineId.error) {
+            return responseGetOneUserByLineId;
+        }
 
-    if (responseGetOneUserByLineId.data) {
-        console.warn("[supabase setNewUser] this user already exists. responseGetOneUserByLineId: \n", responseGetOneUserByLineId);
-        return {
-            ...responseGetOneUserByLineId,
-            status: 201,
-        };
+        if (responseGetOneUserByLineId.data) {
+            console.warn("[supabase setNewUser] this user already exists. responseGetOneUserByLineId: \n", responseGetOneUserByLineId);
+            return {
+                ...responseGetOneUserByLineId,
+                status: 201,
+            };
+        }
     }
 
     const responseCreateNewUser = await clientServiceRole.from(userTable).insert({ line_id, line_display_name, line_language, line_picture_url }).select();
