@@ -6,10 +6,10 @@ export default {
         description: "取得我的個人資訊",
         async reply(event) {
             const userId = event.source.userId;
-            const { data, error } = await ModelUser(userId).fetchDBUser();
+            const { data, error, status } = await ModelUser(userId).fetchDBUser();
 
             if (error) {
-                if (error.status === 404) {
+                if (status === 404) {
                     return "你還沒註冊個人資料喔，請輸入 !register 來註冊";
                 }
                 return "很抱歉，取得個人資料時發生錯誤，請稍後再試";
