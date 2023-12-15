@@ -56,10 +56,10 @@ export default {
             }
 
             if (statusRegisterDBUser === 201) {
-                return `你好，${displayName}，你早就註冊完成啦！逃不過我的法眼的`;
+                return `你好，${displayName}，註冊完成，你的註冊時間是 ${dataRegisterDBUser.created_at}`;
             }
 
-            return `你好，${displayName}，註冊完成，你的註冊時間是 ${dataRegisterDBUser.created_at}`;
+            return `你好，${displayName}，你早就註冊完成啦！逃不過我的法眼的`;
         },
     },
 };

@@ -53,7 +53,7 @@ export async function getOneUserByLineId(line_id) {
  *  @returns {Promise<{
  *      data: User,
  *      error: Error,
- *      status: 200|201|400 // (200 建立成功, 201 已經建立過, 400 參數錯誤)
+ *      status: 200|201|400 // (201 建立成功, 200 已經建立過, 400 參數錯誤)
  *  }>}
  */
 export async function setNewUser(NewUserData = {}) {
@@ -88,7 +88,7 @@ export async function setNewUser(NewUserData = {}) {
             console.warn("[supabase setNewUser] this user already exists. responseGetOneUserByLineId: \n", responseGetOneUserByLineId);
             return {
                 ...responseGetOneUserByLineId,
-                status: 201,
+                status: 200,
             };
         }
     }
