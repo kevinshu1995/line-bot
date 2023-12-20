@@ -3,13 +3,15 @@ import ApiLineBot from "../api/line-bot.js";
 
 export default function User(line_id) {
     const user = {
+        id: null,
         line_id,
         line_display_name: null,
         line_language: null,
         line_picture_url: null,
     };
 
-    function setPrivateUser({ line_display_name, line_language, line_picture_url }) {
+    function setPrivateUser({ line_display_name, line_language, line_picture_url, user_id }) {
+        user.id = user_id;
         user.line_display_name = line_display_name;
         user.line_language = line_language;
         user.line_picture_url = line_picture_url;
@@ -26,6 +28,7 @@ export default function User(line_id) {
         }
 
         setPrivateUser({
+            user_id: response.data.id,
             line_display_name: response.data.line_display_name,
             line_language: response.data.line_language,
             line_picture_url: response.data.line_picture_url,
@@ -44,6 +47,7 @@ export default function User(line_id) {
         }
 
         setPrivateUser({
+            user_id: response.data.id,
             line_display_name: response.data.line_display_name,
             line_language: response.data.line_language,
             line_picture_url: response.data.line_picture_url,
@@ -63,6 +67,7 @@ export default function User(line_id) {
         }
 
         setPrivateUser({
+            user_id: response.data.id,
             line_display_name: response.data.line_display_name,
             line_language: response.data.line_language,
             line_picture_url: response.data.line_picture_url,
@@ -97,6 +102,7 @@ export default function User(line_id) {
         }
 
         setPrivateUser({
+            user_id: response.data.id,
             line_display_name: data.displayName,
             line_language: data.language,
             line_picture_url: data.pictureUrl,
