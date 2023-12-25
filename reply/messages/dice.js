@@ -238,9 +238,6 @@ export default {
                 console.log("getUserAllRollingResults \n", response);
                 dataUserAllRollingResults = response.data;
             }
-            const allCorrect = dataUserAllRollingResults?.allCorrect;
-            const wrongCounts = dataUserAllRollingResults?.totalGuessCount - dataUserAllRollingResults?.allCorrect;
-            const successRate = `${Math.floor((dataUserAllRollingResults?.allCorrect / dataUserAllRollingResults?.totalGuessCount) * 100000) / 1000}%`;
 
             const basicReply = [
                 dataGetUser?.line_display_name ? `Hi ${dataGetUser?.line_display_name}!` : "Hi!",
@@ -248,7 +245,9 @@ export default {
                 isGuessing ? `預測點數為 「${data.user_guesses}」` : "",
                 isGuessing ? `【 預測${data.wrong === 0 ? "成功" : "失敗"} 】` : "",
                 "---",
-                dataUserAllRollingResults?.allCorrect ? `預測成功 ${allCorrect} 次，預測失敗 ${wrongCounts} 次，成功率：${successRate}` : "",
+                dataUserAllRollingResults?.totalCorrectCounts
+                    ? `預測成功 ${dataUserAllRollingResults.totalCorrectCounts} 次，預測失敗 ${dataUserAllRollingResults.totalWrongCounts} 次，成功率：${dataUserAllRollingResults.successRate}`
+                    : "",
             ]
                 .filter(t => t)
                 .join("\n");

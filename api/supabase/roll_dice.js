@@ -88,16 +88,21 @@ export async function getUserAllRollingResults(options = {}) {
                 };
             },
             {
-                wrong: 0,
-                correct: 0,
-                allCorrect: 0,
-                totalGuessCount: response.data.length,
+                wrong: 0, // 猜錯的次數
+                correct: 0, // 猜對的次數
+                allCorrect: 0, // 單次預測全部正確的次數
             }
         );
 
+        const totalCorrectCounts = correctAndWrong.allCorrect;
+        const totalWrongCounts = response.data.length - correctAndWrong?.allCorrect;
+        const successRate = `${Math.floor((correctAndWrong?.allCorrect / response.data.length) * 100000) / 1000}%`;
+
         response.data = {
             data: response.data,
-            ...correctAndWrong,
+            totalCorrectCounts,
+            totalWrongCounts,
+            successRate,
         };
 
         return {
