@@ -40,6 +40,7 @@ const badRequestResponse = options => {
  *              wrong: Number,
  *              correct: Number,
  *              allCorrect: Number,
+ *              totalGuessCount: Number,
  *          },
  *          error: Error,
  *          status: 200 | 400 | 404 // (200 成功, 400 參數錯誤, 404 找不到使用者)
@@ -80,6 +81,7 @@ export async function getUserAllRollingResults(options = {}) {
                 const isAllCorrect = wrong === 0 && correct === rollDiceData.user_guesses.length;
 
                 return {
+                    ...all,
                     wrong: all.wrong + wrong,
                     correct: all.correct + correct,
                     allCorrect: isAllCorrect ? all.allCorrect + 1 : all.allCorrect,
@@ -89,6 +91,7 @@ export async function getUserAllRollingResults(options = {}) {
                 wrong: 0,
                 correct: 0,
                 allCorrect: 0,
+                totalGuessCount: response.data.length,
             }
         );
 
