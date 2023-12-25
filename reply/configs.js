@@ -41,9 +41,9 @@ function getAllCommandsIntroText() {
                 .map(command => {
                     return `${prefix}${command}: ${commandsObj[prefix].commands[command].description}`;
                 })
-                .join("\n");
+                .join("\n\n");
         })
-        .join("\n");
+        .join("\n\n");
 }
 
 /**
