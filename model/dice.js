@@ -52,11 +52,13 @@ export function guessAndRollDices(diceType = 6, userGuesses = []) {
     return { diceResults, wrong, correct };
 }
 
-export default function Dice(lineUserId = null) {
-    const modelUser = ModelUser(lineUserId);
+export default function Dice(options = {}) {
+    const { lineUserId, modelUser } = { lineUserId: null, modelUser: null, ...options };
+    if (!lineUserId && !modelUser) throw new Error("Either lineUserId or modelUser must be provided");
+    const _modelUser = modelUser ?? ModelUser(lineUserId);
 
     async function getUserData() {
-        const currentUser = modelUser.getUser();
+        const currentUser = _modelUser.getUser();
         if (currentUser.line_display_name) {
             return {
                 data: currentUser,
@@ -64,7 +66,7 @@ export default function Dice(lineUserId = null) {
                 status: 200,
             };
         }
-        const response = await modelUser.fetchDBUser();
+        const response = await _modelUser.fetchDBUser();
         return response;
     }
 

@@ -187,7 +187,7 @@ export default {
             "預測點數，並擲骰子 (文字版)。\n格式：`!roll;{骰子類型}-{骰子數}-(預測點數)`\n。例如輸入： `!roll;6-2-(1,2)`，表示擲 [2] 顆 [6] 面骰子，並預測點數為 1, 2\n(預測點數數量必須要與骰子數相同)",
         async mix(event, diceType, diceCounts, guessPointsArray) {
             const userId = event.source.userId;
-            const { rollDice, guessAndRollDice, getUserAllRollingResults, getUserData } = ModelDice(userId);
+            const { rollDice, guessAndRollDice, getUserAllRollingResults, getUserData } = ModelDice({ lineUserId: userId });
             const { data: dataGetUser, error: errorGetUser } = await getUserData();
 
             diceCounts = Number(diceCounts);
