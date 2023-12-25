@@ -17,7 +17,7 @@ export default function PostBackMessage(req) {
             if (reply === null) {
                 return LineBot.replyNothingMockApiResult({ event, message: "no message to reply" });
             }
-            return LineBot.sendMessage([reply], { replyToken: event.replyToken });
+            return LineBot.sendMessage(reply, { replyToken: event.replyToken });
         }
 
         return LineBot.replyNothingMockApiResult({ event, message: "no message to reply" });

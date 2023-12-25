@@ -102,16 +102,22 @@ async function getCommandReplyMessage(userMessage, ...replyCallbackArgs) {
     const commandObject = commands[userFirstLetter].commands[commandText];
     console.log("commandObject \n", commandObject);
 
+    const mixedReply = commandObject?.mix;
+    if (mixedReply && typeof mixedReply === "function") {
+        const mixedReplyResult = await Promise.resolve(mixedReply(...replyCallbackArgs, ...formattedCommandArgs.value));
+        if (mixedReplyResult) return mixedReplyResult;
+    }
+
     const replyText = commandObject?.reply;
     if (replyText && typeof replyText === "function") {
         const replyTextResult = await Promise.resolve(replyText(...replyCallbackArgs, ...formattedCommandArgs.value));
-        if (replyTextResult) return { type: "text", text: replyTextResult };
+        if (replyTextResult) return [{ type: "text", text: replyTextResult }];
     }
 
     const flexMessage = commandObject?.flexMessage;
     if (flexMessage && typeof flexMessage === "function") {
         const flexMessageResult = await Promise.resolve(flexMessage(...replyCallbackArgs, ...formattedCommandArgs.value));
-        if (flexMessageResult) return { type: "flex", ...flexMessageResult };
+        if (flexMessageResult) return [{ type: "flex", ...flexMessageResult }];
     }
 
     return null;

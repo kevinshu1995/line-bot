@@ -16,7 +16,7 @@ export default function CommandMessage(req) {
         // const { data: userProfile, error: userProfileError } = await getUserProfile(event.source.userId);
         // const greeting = userProfile ? `Hello, ${userProfile.displayName} \n` : "";
 
-        return LineBot.sendMessage([reply], { replyToken: event.replyToken });
+        return LineBot.sendMessage(reply, { replyToken: event.replyToken });
     });
 }
 

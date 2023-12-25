@@ -185,7 +185,7 @@ export default {
     roll: {
         description:
             "預測點數，並擲骰子 (文字版)。格式：`!roll;{骰子類型}-{骰子數}-(預測點數)` 。例如輸入： `!roll;6-2-(1,2)` ，表示擲 [2] 顆 [6] 面骰子，並預測點數為 1, 2 (預測點數數量必須要與骰子數相同)",
-        async reply(event, diceType, diceCounts, guessPointsArray) {
+        async mix(event, diceType, diceCounts, guessPointsArray) {
             const userId = event.source.userId;
             const { rollDice, guessAndRollDice, getUserAllRollingResults, getUserData } = ModelDice(userId);
             const { data: dataGetUser, error: errorGetUser } = await getUserData();
@@ -198,15 +198,15 @@ export default {
             const diceTypeTooLargeText = `指令錯誤，骰子面數必須小於等於 ${DICE_MAX_TYPE}，您所設定的值為: ${diceType}`;
 
             if (Number.isNaN(diceCounts)) {
-                return `指令錯誤，骰子數量必須為數字，目前的值為: ${diceCounts} \n${sampleText}`;
+                return [{ type: "text", text: `指令錯誤，骰子數量必須為數字，目前的值為: ${diceCounts} \n${sampleText}` }];
             }
 
             if (Number.isNaN(diceType)) {
-                return `指令錯誤，骰子面數必須為數字，目前的值為: ${diceType} \n${sampleText}`;
+                return [{ type: "text", text: `指令錯誤，骰子面數必須為數字，目前的值為: ${diceType} \n${sampleText}` }];
             }
 
             if (guessPointsArray !== undefined && !Array.isArray(guessPointsArray)) {
-                return `指令錯誤，預測點數必須被圓括號包圍 \n${sampleText}`;
+                return [{ type: "text", text: `指令錯誤，預測點數必須被圓括號包圍 \n${sampleText}` }];
             }
 
             const isGuessing = Array.isArray(guessPointsArray);
@@ -219,17 +219,17 @@ export default {
             if (error) {
                 if (status === 400) {
                     if (code === "DICE_TYPE_TOO_SMALL") {
-                        return diceTypeTooSmallText;
+                        return [{ type: "text", text: diceTypeTooSmallText }];
                     }
                     if (code === "DICE_TYPE_TOO_LARGE") {
-                        return diceTypeTooLargeText;
+                        return [{ type: "text", text: diceTypeTooLargeText }];
                     }
-                    return `指令錯誤 \nerror code: ${code}`;
+                    return [{ type: "text", text: `指令錯誤 \nerror code: ${code}` }];
                 }
                 if (status === 404) {
-                    return `發生錯誤，找不到使用者 \nerror code: ${code}`;
+                    return [{ type: "text", text: `發生錯誤，找不到使用者 \nerror code: ${code}` }];
                 }
-                return `發生錯誤， \nerror code: ${code}`;
+                return [{ type: "text", text: `發生錯誤， \nerror code: ${code}` }];
             }
 
             let dataUserAllRollingResults = null;
@@ -238,13 +238,23 @@ export default {
                 dataUserAllRollingResults = response.data;
             }
 
-            const greet = dataGetUser?.line_display_name ? `Hi ${dataGetUser?.line_display_name}!` : "Hi!";
-            const resultText = `你擲 ${data.dice_counts} 顆 ${data.dice_type} 面骰子，擲出了 「${data.dice_results.join(",")}」`;
-            const guessResultText = isGuessing ? `\n預測點數為 「${data.user_guesses}」，預測${data.wrong === 0 ? "成功" : "失敗"}` : "";
-            const totalGuessText = dataUserAllRollingResults?.allCorrect ? `\n你目前總共預測成功 ${dataUserAllRollingResults.allCorrect} 次` : "";
-            const notRegisteredText = "\n\n[提醒] 你尚未註冊，輸入 `!register` 進行註冊，即可紀錄預測結果";
+            const basicReply = [
+                dataGetUser?.line_display_name ? `Hi ${dataGetUser?.line_display_name}!` : "Hi!",
+                `你擲 ${data.dice_counts} 顆 ${data.dice_type} 面骰子，擲出了 「${data.dice_results.join(",")}」`,
+                isGuessing ? `預測點數為 「${data.user_guesses}」，預測${data.wrong === 0 ? "成功" : "失敗"}` : "",
+                dataUserAllRollingResults?.allCorrect ? `你目前總共預測成功 ${dataUserAllRollingResults.allCorrect} 次` : "",
+            ]
+                .filter(t => t)
+                .join("\n");
 
-            return `${greet}\n${resultText}${guessResultText}${totalGuessText}${errorGetUser ? notRegisteredText : ""}`;
+            if (errorGetUser) {
+                return [
+                    { type: "text", text: basicReply },
+                    { type: "text", text: "[提醒] 你尚未註冊，輸入 `!register` 進行註冊，即可紀錄預測結果" },
+                ];
+            }
+
+            return [{ type: "text", text: basicReply }];
         },
     },
 };
